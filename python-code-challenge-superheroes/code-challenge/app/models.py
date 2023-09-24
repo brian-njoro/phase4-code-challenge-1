@@ -14,6 +14,10 @@ class Hero(db.Model):
     super_name = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
+    # many-to-many relationship with Power table
+    powers = db.relationship('Power', secondary='hero_powers', back_populates='heroes')
+
 
 class Power(db.Model):
     __tablename__ = 'powers'
@@ -23,7 +27,10 @@ class Power(db.Model):
     description = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-
+    
+    # Define the many-to-many relationship with Hero
+    heroes = db.relationship('Hero', secondary='hero_powers', back_populates='powers')
+    
 class HeroPower(db.Model):
     __tablename__ = 'hero_powers'
 
