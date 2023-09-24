@@ -75,6 +75,30 @@ def get_power(id):
     }
     return jsonify(power_data)
 
+# PATCH /powers/:id
+@app.route('/powers/<int:id>', methods=['PATCH'])
+def update_power(id):
+    data = request.json
+    description = data.get('description')
+
+    power = Power.query.get(id)
+
+    if not power:
+        return jsonify({"error": "Power not found"}), 404
+
+    if description is :
+        power.description = description
+
+    try:
+        db.session.commit()
+        return jsonify({
+            "id": power.id,
+            "name": power.name,
+            "description": power.description
+        })
+    except Exception as e:
+        return jsonify({"errors": ["validation errors"]}), 400
+
 
 
 if __name__ == '__main__':
