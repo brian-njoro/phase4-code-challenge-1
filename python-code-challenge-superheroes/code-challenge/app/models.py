@@ -10,6 +10,16 @@ class Hero(db.Model):
     name = db.Column(db.String)
     super_name = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp()
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+class Power(db.Model):
+    __tablename__ = 'powers'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.String)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
 
 # add any models you may need. 
