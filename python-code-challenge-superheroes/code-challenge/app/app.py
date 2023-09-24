@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from flask import Flask, make_response
+from flask import Flask, make_response,request,jsonify
 from flask_migrate import Migrate
 
-from models import db, Hero
+from models import db, Hero,Power,HeroPower
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
@@ -13,9 +13,16 @@ migrate = Migrate(app, db)
 
 db.init_app(app)
 
-@app.route('/')
-def home():
-    return ''
+# GET /heroes
+@app.route('/heroes', methods=['GET'])
+def get_heroes():
+    heroes = Hero.query.all()
+    hero_list = [
+        {"id": hero.id, "name": hero.name, "super_name": hero.super_name}
+        for hero in heroes
+    ]
+    return jsonify(hero_list)
+
 
 
 if __name__ == '__main__':
