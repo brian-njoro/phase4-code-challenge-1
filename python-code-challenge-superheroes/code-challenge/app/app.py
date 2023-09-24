@@ -23,6 +23,28 @@ def get_heroes():
     ]
     return jsonify(hero_list)
 
+# GET /heroes/:id
+@app.route('/heroes/<int:id>', methods=['GET'])
+def get_hero(id):
+    hero = Hero.query.get(id)
+
+    if not hero:
+        return jsonify({"error": "Hero not found"}), 404
+
+    hero_data = {
+        "id": hero.id,
+        "name": hero.name,
+        "super_name": hero.super_name,
+        "powers": [
+            {
+                "id": power.id,
+                "name": power.name,
+                "description": power.description
+            }
+            for power in hero.powers
+        ]
+    }
+    return jsonify(hero_data)
 
 
 if __name__ == '__main__':
