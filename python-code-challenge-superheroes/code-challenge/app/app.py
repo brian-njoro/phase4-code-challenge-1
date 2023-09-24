@@ -86,7 +86,7 @@ def update_power(id):
     if not power:
         return jsonify({"error": "Power not found"}), 404
 
-    if description is :
+    if description is not None:
         power.description = description
 
     try:
