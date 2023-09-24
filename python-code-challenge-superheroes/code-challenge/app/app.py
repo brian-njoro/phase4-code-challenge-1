@@ -60,6 +60,22 @@ def get_powers():
     ]
     return jsonify(power_list)
 
+# GET /powers/:id
+@app.route('/powers/<int:id>', methods=['GET'])
+def get_power(id):
+    power = Power.query.get(id)
+
+    if not power:
+        return jsonify({"error": "Power not found"}), 404
+
+    power_data = {
+        "id": power.id,
+        "name": power.name,
+        "description": power.description
+    }
+    return jsonify(power_data)
+
+
 
 if __name__ == '__main__':
     app.run(port=5555)
