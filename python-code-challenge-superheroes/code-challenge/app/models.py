@@ -28,9 +28,15 @@ class Power(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
-    # Define the many-to-many relationship with Hero
+    @validates('description')
+    def validate_description(self, key, description):
+        if len(description) < 20:
+            raise ValueError('Description must be at least 20 characters long')
+        return description
+
+    #many-to-many relationship with Hero
     heroes = db.relationship('Hero', secondary='hero_powers', back_populates='powers')
-    
+
 class HeroPower(db.Model):
     __tablename__ = 'hero_powers'
 
