@@ -16,10 +16,8 @@ class Hero(db.Model):
         'Power',
         secondary='hero_powers',
         backref='heroes',
-        viewonly=True,
-        primaryjoin="Hero.id == hero_powers.c.hero_id",
-        secondaryjoin="Power.id == hero_powers.c.power_id",
     )
+
 
     def __repr__(self):
         return f"<Hero(id={self.id}, name='{self.name}', super_name='{self.super_name}')>"

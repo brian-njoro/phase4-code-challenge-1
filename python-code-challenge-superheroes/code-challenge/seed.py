@@ -10,7 +10,7 @@ from models.power import Power
 fake = Faker()
 
 with app.app_context():
-    # Delete existing data if needed (optional)
+    # Delete existing data if needed 
     db.session.query(HeroPower).delete()
     db.session.query(Hero).delete()
     db.session.query(Power).delete()
