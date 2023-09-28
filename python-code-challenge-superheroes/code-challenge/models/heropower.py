@@ -11,6 +11,7 @@ hero_power = db.Table(
     db.Column("updated_at", db.DateTime, onupdate=db.func.now())
 )
 
+
 @validates('strength')
 def validate_strength(self, key, value):
         strength_level = ['Strong', 'Weak', 'Average']

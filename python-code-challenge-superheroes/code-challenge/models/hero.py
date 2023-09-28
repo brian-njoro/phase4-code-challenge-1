@@ -1,5 +1,6 @@
 from .dbconfig import db
 from datetime import datetime
+from.heropower import hero_power
 
 class Hero(db.Model):
     __tablename__ = 'heroes'
@@ -12,7 +13,7 @@ class Hero(db.Model):
 
     powers = db.relationship(
         'Power',
-        secondary='hero_power',
+        secondary=hero_power,
         back_populates='heroes',
     )
 

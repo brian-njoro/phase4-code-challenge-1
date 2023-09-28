@@ -27,4 +27,3 @@ class Power(db.Model):
 
     def __repr__(self):
         return f"<Power(id={self.id}, name='{self.name}', description='{self.description}')>"
-

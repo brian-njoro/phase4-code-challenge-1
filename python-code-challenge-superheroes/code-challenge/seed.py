@@ -1,113 +1,70 @@
-
-
-# from random import choice as rc
-# from faker import Faker
-# from app import app, db  
-# from models.heropower import HeroPower
-# from models.hero import Hero
-# from models.power import Power
-
-# fake = Faker()
-
-# with app.app_context():
-#     # Delete existing data if needed 
-#     db.session.query(HeroPower).delete()
-#     db.session.query(Hero).delete()
-#     db.session.query(Power).delete()
-
-#     # Create and add sample powers
-#     sample_powers = [
-#         {"name": "super strength", "description": "gives the wielder super-human strengths"},
-#         {"name": "flight", "description": "gives the wielder the ability to fly through the skies at supersonic speed"},
-#         {"name": "super human senses", "description": "allows the wielder to use her senses at a super-human level"},
-#         {"name": "elasticity", "description": "can stretch the human body to extreme lengths"}
-#     ]
-
-#     powers = [Power(**power_data) for power_data in sample_powers]
-#     db.session.add_all(powers)
-
-#     # Create and add sample heroes
-#     sample_heroes = [
-#         {"name": "Kamala Khan", "super_name": "Ms. Marvel"},
-#         {"name": "Doreen Green", "super_name": "Squirrel Girl"},
-        
-#     ]
-
-#     heroes = [Hero(**hero_data) for hero_data in sample_heroes]
-#     db.session.add_all(heroes)
-
-#     strengths = ["Strong", "Weak", "Average"]
-
-#     hero_powers = []
-#     for hero in heroes:
-#         for _ in range(3):  
-#             power = rc(powers)
-#             strength = rc(strengths)
-#             hero_power = HeroPower(hero=hero, power=power, strength=strength)
-#             hero_powers.append(hero_power)
-
-#     db.session.add_all(hero_powers)
-
-#     # Commit the changes to the database
-#     db.session.commit()
-
-# print("Data seeding complete.")
-
-
-
-
-from random import choice
+from random import choice as rc, randint
 from faker import Faker
-from app import app, db  
-from models.heropower import HeroPower
+from app import app, db
+from models.heropower import hero_power
 from models.hero import Hero
 from models.power import Power
+import random
 
 fake = Faker()
 
-with app.app_context():
-    try:
-        # Delete existing data if needed 
-        db.session.query(HeroPower).delete()
-        db.session.query(Hero).delete()
-        db.session.query(Power).delete()
+def make_power():
+    Power.query.delete()
+    power = []
+    for i in range(50):
+        name = fake.name()
+        description = fake.text()
+        while len(description) < 20:
+            description = fake.text(max_nb_chars=20)
+        p = Power(name=name, description=description)
+        power.append(p)
 
-        # Create and add sample powers
-        sample_powers = [
-            {"name": "super strength", "description": "gives the wielder super-human strengths"},
-            {"name": "flight", "description": "gives the wielder the ability to fly through the skies at supersonic speed"},
-            {"name": "super human senses", "description": "allows the wielder to use her senses at a super-human level"},
-            {"name": "elasticity", "description": "can stretch the human body to extreme lengths"}
-        ]
+    db.session.add_all(power)
+    db.session.commit()
 
-        powers = [Power(**power_data) for power_data in sample_powers]
-        db.session.add_all(powers)
+def make_hero():
 
-        # Create and add sample heroes
-        sample_heroes = [
-            {"name": "Kamala Khan", "super_name": "Ms. Marvel"},
-            {"name": "Doreen Green", "super_name": "Squirrel Girl"},
-        ]
+    Hero.query.delete()
+    
+    heroes = []
+    for i in range(50):
+        h= Hero(name=fake.name(), super_name = fake.name())
+        heroes.append(h)
 
-        heroes = [Hero(**hero_data) for hero_data in sample_heroes]
-        db.session.add_all(heroes)
+    db.session.add_all(heroes)
+    db.session.commit()
 
-        strengths = ["Strong", "Weak", "Average"]
 
-        hero_powers = []
-        for hero in heroes:
-            for _ in range(3):  
-                power = choice(powers)
-                strength = choice(strengths)
-                hero_power = HeroPower(hero=hero, power=power, strength=strength)
-                hero_powers.append(hero_power)
+def make_hero_power():
+    combination = set()
+    strengths = ["Strong","Weak","Average"]
+    for _ in range(30):
+        hero_id = randint(1,20)
+        power_id = randint(1,20)
+        strength = rc(strengths)
 
-        db.session.add_all(hero_powers)
+        if (hero_id,power_id,strength) in combination:
+            continue
+        combination.add((hero_id,power_id,strength))
+        hero_power_data = {
+            "hero_id": hero_id,
+            "power_id": power_id,
+            "strength": strength
 
-        # Commit the changes to the database
+        }
+
+        statement = db.insert(hero_power).values(hero_power_data)
+
+        db.session.execute(statement)
         db.session.commit()
 
-        print("Data seeding complete.")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        db.session.rollback()
+
+
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        make_hero()
+        make_power()
+        make_hero_power()
+      
