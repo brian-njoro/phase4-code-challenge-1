@@ -18,7 +18,7 @@ class Power(db.Model):
         return description
 
 
-    hero_powers = db.relationship('HeroPower', backref='power', cascade='all, delete-orphan')
+    hero_powers = db.relationship('HeroPower', backref='power_relation', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"<Power(id={self.id}, name='{self.name}', description='{self.description}')>"

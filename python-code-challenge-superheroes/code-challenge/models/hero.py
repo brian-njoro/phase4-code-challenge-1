@@ -10,13 +10,27 @@ class Hero(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    hero_powers = db.relationship('HeroPower', backref='hero', cascade='all, delete-orphan')
+    # hero_powers = db.relationship('HeroPower', backref='hero', cascade='all, delete-orphan')
+
+    # powers = db.relationship(
+    #     'Power',
+    #     secondary='hero_powers',
+    #     backref='heroes',
+    # )
+    hero_powers = db.relationship(
+        'HeroPower',
+        backref='associated_hero',
+        primaryjoin="Hero.id == HeroPower.hero_id"  
+    )
 
     powers = db.relationship(
         'Power',
         secondary='hero_powers',
         backref='heroes',
+        overlaps="associated_hero,hero_powers"
+
     )
+
 
 
     def __repr__(self):
