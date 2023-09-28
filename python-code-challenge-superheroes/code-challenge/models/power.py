@@ -1,4 +1,5 @@
 from .dbconfig import db
+from .heropower import hero_power
 from datetime import datetime
 from sqlalchemy.orm import validates
 
@@ -7,7 +8,7 @@ class Power(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    description = db.Column(db.String)
+    description = db.Column(db.String(20))
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
@@ -17,8 +18,12 @@ class Power(db.Model):
             raise ValueError('Description must be at least 20 characters long')
         return description
 
-
-    hero_powers = db.relationship('HeroPower', backref='power_relation', cascade='all, delete-orphan')
+    
+    heroes = db.relationship(
+        'Hero',
+        secondary=hero_power, 
+        back_populates='powers'
+    )
 
     def __repr__(self):
         return f"<Power(id={self.id}, name='{self.name}', description='{self.description}')>"
